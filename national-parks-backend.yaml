@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-nationalparks
+  labels:
+    app: mongodb-nationalparks
+    app.kubernetes.io/part-of: national-parks-app
+    app.openshift.io/runtime: mongodb
+    app.openshift.io/runtime-namespace: openshift
+    app.openshift.io/runtime-version: '3.6'
+spec:
+  selector:
+    matchLabels:
+      app: mongodb-nationalparks
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb-nationalparks
+    spec:
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: mongodb-nationalparks
+          env:
+            - name: MONGODB_USER
+              value: mongodb
+            - name: MONGODB_PASSWORD
+              value: mongodb
+            - name: MONGODB_DATABASE
+              value: mongodb
+            - name: MONGODB_ADMIN_PASSWORD
+              value: mongodb
+            - name: LICENSE
+              value: accept
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          image: >-
+            quay.io/mmondics/mongodb:3.6-manifest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-nationalparks
+  labels:
+    app: mongodb-nationalparks
+spec:
+  selector:
+    app: mongodb-nationalparks
+  ports:
+    - name: 27017-tcp
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: nationalparks-mongodb-parameters
+data:
+  DATABASE_SERVICE_NAME: bW9uZ29kYi1uYXRpb25hbHBhcmtz
+  MONGODB_ADMIN_PASSWORD: bW9uZ29kYg==
+  MONGODB_DATABASE: bW9uZ29kYg==
+  MONGODB_PASSWORD: bW9uZ29kYg==
+  MONGODB_USER: bW9uZ29kYg==
+type: Opaque
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: national-parks-app
+    role: backend
+    type: parksmap-backend
+    component: nationalparks
+    app.kubernetes.io/part-of: national-parks-app
+  name: nationalparks
+spec:
+  selector:
+    matchLabels:
+      app: nationalparks
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nationalparks
+        component: nationalparks
+        role: backend
+        type: parksmap-backend
+    spec:
+      containers:
+        - name: nationalparks
+          image: >-
+            quay.io/mmondics/national-parks-backend:manifest
+          envFrom:
+            - secretRef:
+                name: nationalparks-mongodb-parameters
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nationalparks
+  labels:
+    app: national-parks-app
+    role: backend
+    type: parksmap-backend
+    component: nationalparks
+spec:
+  selector:
+    app: nationalparks
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: nationalparks
+  labels:
+    app: national-parks-app
+    role: backend
+    type: parksmap-backend
+    component: nationalparks
+spec:
+  to:
+    kind: Service
+    name: nationalparks
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  wildcardPolicy: None

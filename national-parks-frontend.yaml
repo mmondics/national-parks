@@ -1,0 +1,68 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sa-nationalparks
+subjects:
+  - kind: ServiceAccount
+    name: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: national-parks-app
+    component: parksmap
+    role: frontend
+    app.kubernetes.io/part-of: national-parks-app
+  name: parksmap
+spec:
+  selector:
+    matchLabels:
+      app: parksmap
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: parksmap
+    spec:
+      containers:
+        - name: parksmap
+          image: >-
+            quay.io/mmondics/national-parks-frontend:manifest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: parksmap
+  name: parksmap
+spec:
+  selector:
+    app: parksmap
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: parksmap
+  name: parksmap
+spec:
+  path: /
+  to:
+    kind: Service
+    name: parksmap
+    weight: 100
+  port:
+    targetPort: 8080-tcp
