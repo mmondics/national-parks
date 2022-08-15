@@ -1,0 +1,110 @@
+= Parksmap application
+This application is a frontend web and gateway to backend services that provide geolocation data on services
+
+
+== Installation
+As the application needs to interact with openshift's API, you'll need to provide some permissions to the default ServiceAccount for that.
+
+Assuming you're using the project <roadshow>:
+
+----
+oc new-project roadshow
+oc policy add-role-to-user view system:serviceaccount:roadshow:default
+oc create -f ./ose3/application-template.json
+oc new-app parksmap-web
+----
+
+There's some options that can be parameterized:
+
+* APPLICATION_NAME: Name of the application
+* MAVEN_MIRROR_URL: Url of a maven mirror 
+* APPLICATION_HOSTNAME: Hostname/route to access your application
+
+Example:
+
+----
+oc new-app parksmap-web -p APPLICATION_NAME=parksviewer -p APPLICATION_HOSTNAME=parksviewer.apps.127.0.0.1.xip.io -p MAVEN_MIRROR_URL=http://nexus.ci:8081/content/groups/public
+----
+
+
+== Backends
+Backend services require to have an specific annotation to be discovered:
+
+----
+type: parksmap-backend
+----
+
+Every backend should provide an endpoint located at */ws/info* that will provide link:src/main/java/com/openshift/evg/roadshow/rest/gateway/model/Backend.java[Backend] information.
+
+Here you can find 2 sample implementations:
+
+* Springboot:
+
+[source,java]
+----
+@RequestMapping("/ws/info")
+@RestController
+public class BackendController{
+
+    @RequestMapping(method = RequestMethod.GET, value = "/", produces = "application/json")
+    public Backend get() {
+        return new Backend(....);
+    }
+}
+----
+
+* JEE:
+
+[source,java]
+----
+@Path("/ws/info")
+public class BackendController{
+    @GET
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Backend get() {
+        return new Backend(....);
+    }
+}
+----
+
+
+== Use
+Once the application has been deployed, you can manually register/unregister a backend:
+
+== Test locally
+This application can be run locally against while having the backend services running on a local openshift instance (all-in-one, oc cluster up or CDK).
+
+=== Run it
+To run the application, you should just:
+
+----
+mvn clean install spring-boot:run
+----
+
+Backends will be registered if they are deployed or when deployed, and unregistered when undeployed.
+
+But you can test registration/unregistration manually.
+
+=== Register
+To register a backend:
+
+----
+curl -i http://parksviewer.apps.127.0.0.1.xip.io/ws/backends/register?service=nationalparks-roadshow.127.0.0.1.xip.io
+curl -i http://parksviewer.apps.127.0.0.1.xip.io/ws/backends/register?service=mlbparks-roadshow.127.0.0.1.xip.io
+----
+
+=== Unregister
+To unregister a backend:
+
+----
+curl -i http://parksviewer.apps.127.0.0.1.xip.io/ws/backends/unregister?service=nationalparks-roadshow.127.0.0.1.xip.io
+curl -i http://parksviewer.apps.127.0.0.1.xip.io/ws/backends/unregister?service=mlbparks-roadshow.127.0.0.1.xip.io
+----
+
+=== List backend
+To list available backends:
+
+----
+curl -i http://parksviewer.apps.127.0.0.1.xip.io/ws/backends/list
+----

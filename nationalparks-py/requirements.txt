@@ -1,0 +1,7 @@
+mod_wsgi
+Flask
+flask-restful
+pymongo
+itsdangerous
+Jinja2
+werkzeug
