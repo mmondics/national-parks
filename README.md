@@ -60,6 +60,10 @@ Note: if you want to use the OpenShift web console to deploy the application ins
     echo "http://$(oc get route parksmap -n national-parks -o=jsonpath='{.spec.host}')"
     ```
   
+You should now see the National Parks map with US locations loaded.
+
+![national-parks-loaded-home](https://raw.githubusercontent.com/mmondics/media/main/images/national-parks-loaded-home.png)
+
 ## Notable Changes from Source Repositories
 Some other notable changes from the source repositories include:
 - Rebuilt container images to be multiarchitecture (amd64, s390x, ppc64le) rather than solely amd64
@@ -151,3 +155,5 @@ You can deploy this application via the OpenShift web console.
     ![ocp-national-parks-topology-focus-2](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-national-parks-topology-focus-2.png)
 
 You should now see the National Parks map with US locations loaded.
+
+![national-parks-loaded-home](https://raw.githubusercontent.com/mmondics/media/main/images/national-parks-loaded-home.png)
