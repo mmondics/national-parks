@@ -112,6 +112,10 @@ Where you replace `<POD_NAME>` with the name of the pod showing errors from `oc 
 
 Yes, delete the `national-parks` project, wait a few minutes for the objects to be deleted, then start over from step 1 of the [procedure](#procedure).
 
+```text
+oc delete project national-parks
+```
+
 ### I don't have access to the `oc` CLI / I don't know how to use the `oc` CLI
 
 You can deploy this application via the OpenShift web console.
