@@ -81,69 +81,69 @@ Some other notable changes from the source repositories include:
 
 ### Cannot create a new project
 
-    If your OpenShift credential does not have the required role to create a new project, you can use any existing project that you have access to. However, you will need to modify the commands above to reflect the new project name.
+If your OpenShift credential does not have the required role to create a new project, you can use any existing project that you have access to. However, you will need to modify the commands above to reflect the new project name.
 
-    If you cannot create a new project and you do not have an existing project, you should reach out to your OpenShift cluster administrator to provide this for you.
+If you cannot create a new project and you do not have an existing project, you should reach out to your OpenShift cluster administrator to provide this for you.
 
 ### Cannot access the Parksmap application in step 5
 
-    Check the status of the pods in the national-parks project: `oc get pods -n national-parks`. All 3 pods should be running and say 1/1 are ready.
-    
-    ```text
-    NAME                                     READY   STATUS    RESTARTS   AGE
-    mongodb-nationalparks-569d8f967b-vkkgp   1/1     Running   0          72m
-    nationalparks-6f4b8858d5-wfns2           1/1     Running   0          72m
-    parksmap-84c87669d7-pf8ps                1/1     Running   0          72m
-    ```
+Check the status of the pods in the national-parks project: `oc get pods -n national-parks`. All 3 pods should be running and say 1/1 are ready.
 
-    If any pods are not in this state, you need to investigate and find the source of the error. Some helpful commands will be: 
+```text
+NAME                                     READY   STATUS    RESTARTS   AGE
+mongodb-nationalparks-569d8f967b-vkkgp   1/1     Running   0          72m
+nationalparks-6f4b8858d5-wfns2           1/1     Running   0          72m
+parksmap-84c87669d7-pf8ps                1/1     Running   0          72m
+```
 
-    ```text
-    oc get events -n national-parks
-    ```
+If any pods are not in this state, you need to investigate and find the source of the error. Some helpful commands will be: 
 
-    ```text
-    oc logs <POD_NAME> -n national-parks
-    ```
+```text
+oc get events -n national-parks
+```
 
-    Where you replace `<POD_NAME>` with the name of the pod showing errors from `oc get pods -n national-parks`.
+```text
+oc logs <POD_NAME> -n national-parks
+```
+
+Where you replace `<POD_NAME>` with the name of the pod showing errors from `oc get pods -n national-parks`.
 
 ### I messed up somewhere. Can I delete everything and try again?
 
-    Yes, delete the `national-parks` project, wait a few minutes for the objects to be deleted, then start over from step 1 of the [procedure](#procedure).
+Yes, delete the `national-parks` project, wait a few minutes for the objects to be deleted, then start over from step 1 of the [procedure](#procedure).
 
 ### I don't have access to the `oc` CLI / I don't know how to use the `oc` CLI
 
-    You can deploy this application via the OpenShift web console.
+You can deploy this application via the OpenShift web console.
 
-    1. Create a new project: Administrator -> Home -> Projects -> New Project
+1. Create a new project: Administrator -> Home -> Projects -> New Project
 
-        ![ocp-new-project](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-new-project.png)
-    
-    2. Open the Import Yaml page by clicking the button in the top bar of the OpenShift console. 
-   
-        ![ocp-import-yaml](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-import-yaml.png)
+    ![ocp-new-project](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-new-project.png)
 
-    3. Double check that you are in the national-parks project and change into it from the dropdown menu if you are not. 
+2. Open the Import Yaml page by clicking the button in the top bar of the OpenShift console. 
 
-        ![ocp-import-yaml-project](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-import-yaml-project.png)
- 
-    4. Paste the contents of [national-parks-combined.yaml](national-parks-combined.yaml) into the Import Yaml page and click Create.
-    
-    5. Navigate to the Developer Topology page (Developer -> Topology)
+    ![ocp-import-yaml](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-import-yaml.png)
 
-        ![ocp-national-parks-topology](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-national-parks-topology.png)
-    
-    6. Click the link button associated with the `national-parks` icon
+3. Double check that you are in the national-parks project and change into it from the dropdown menu if you are not. 
 
-        ![ocp-national-parks-topology-focus](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-national-parks-topology-focus.png)
+    ![ocp-import-yaml-project](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-import-yaml-project.png)
 
-    7. In the URL for the new page that opens in your browser, add `/ws/data/load` to the end (e.g. `http://nationalparks-national-parks.apps.example.com/ws/data/load`)
+4. Paste the contents of [national-parks-combined.yaml](national-parks-combined.yaml) into the Import Yaml page and click Create.
 
-        You should see `Welcome to the National Parks data service.` returned in the web browser. 
+5. Navigate to the Developer Topology page (Developer -> Topology)
 
-    8. Back in the Topology Page, click the link associated with the `parksmap` icon
+    ![ocp-national-parks-topology](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-national-parks-topology.png)
 
-        ![ocp-national-parks-topology-focus-2](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-national-parks-topology-focus-2.png)
+6. Click the link button associated with the `national-parks` icon
 
-    You should now see the National Parks map with US locations loaded.
+    ![ocp-national-parks-topology-focus](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-national-parks-topology-focus.png)
+
+7. In the URL for the new page that opens in your browser, add `/ws/data/load` to the end (e.g. `http://nationalparks-national-parks.apps.example.com/ws/data/load`)
+
+    You should see `Welcome to the National Parks data service.` returned in the web browser. 
+
+8. Back in the Topology Page, click the link associated with the `parksmap` icon
+
+    ![ocp-national-parks-topology-focus-2](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-national-parks-topology-focus-2.png)
+
+You should now see the National Parks map with US locations loaded.
