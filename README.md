@@ -18,7 +18,7 @@ This application is made up of a frontend with source code [here](https://github
     - [I don't have access to the `oc` CLI / I don't know how to use the `oc` CLI](#i-dont-have-access-to-the-oc-cli--i-dont-know-how-to-use-the-oc-cli)
 
 ## Requirements
-1. OpenShift cluster (amd64, arm64, or s390x)
+1. OpenShift cluster (amd64, ppc64le, or s390x)
 2. Ability to create a new project in OpenShift
 3. Access to the OpenShift command line interface (CLI) or web console
 
@@ -65,7 +65,7 @@ You should now see the National Parks map with US locations loaded.
 ![national-parks-loaded-home](https://raw.githubusercontent.com/mmondics/media/main/images/national-parks-loaded-home.png)
 
 ## Notable Changes from Source Repositories
-Some other notable changes from the source repositories include:
+Some notable changes from the source repositories include:
 - Rebuilt container images to be multiarchitecture (amd64, s390x, ppc64le) rather than solely amd64
   - See [Tested Platforms section]()
 - Added new default layer "Outdoors" that is more relevant to a National Parks map
