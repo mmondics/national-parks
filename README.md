@@ -35,7 +35,7 @@ Note: if you want to use the OpenShift web console to deploy the application ins
 2. Deploy the full application (combined frontend and backend)
 
     ```text
-    oc create -f https://raw.githubusercontent.com/mmondics/national-parks/main/national-parks-combined.yaml
+    oc create -f https://raw.githubusercontent.com/mmondics/national-parks/main/yaml/combined/national-parks-combined.yaml
     ```
 
 3. Set the `NPROUTE` variable for use in the next step.
