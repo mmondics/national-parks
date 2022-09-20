@@ -67,13 +67,13 @@ You should now see the National Parks map with US locations loaded.
 ## Notable Changes from Source Repositories
 Some notable changes from the source repositories include:
 - Rebuilt container images to be multiarchitecture (amd64, s390x, ppc64le) rather than solely amd64
-  - See [Tested Platforms section]()
+  - See [Tested Platforms section](#tested-platforms)
 - Added new default layer "Outdoors" that is more relevant to a National Parks map
 - Added links to relevant National Parks Service website in each location marker
 - Added smooth zoom when clicking on map or marker
 - Added zoom in/out and "home" buttons to map legend
 - Centered map to USA locations
-- Included USA parks only (feel free to submit a pull request adding more locations to [nationalparks.json](nationalparks-py/nationalparks.json). You can use [nationalparks-all.json](nationalparks-py/nationalparks-all.json) as a source, adding in appropriate links.)
+- Included USA parks only (feel free to submit a pull request adding more locations to [nationalparks.json](/source/nationalparks-py/nationalparks.json). You can use [nationalparks-all.json](/source/nationalparks-py/nationalparks-all.json) as a source, adding in appropriate links.)
 
 
 ## Tested Platforms
@@ -137,7 +137,7 @@ You can deploy this application via the OpenShift web console.
 
     ![ocp-import-yaml-project](https://raw.githubusercontent.com/mmondics/media/main/images/ocp-import-yaml-project.png)
 
-4. Paste the contents of [national-parks-combined.yaml](national-parks-combined.yaml) into the Import Yaml page and click Create.
+4. Paste the contents of [national-parks-combined.yaml](/yaml/combined/national-parks-combined.yaml) into the Import Yaml page and click Create.
 
 5. Navigate to the Developer Topology page (Developer -> Topology)
 
