@@ -32,7 +32,7 @@ spec:
       containers:
         - name: parksmap
           image: >-
-            quay.io/mmondics/national-parks-frontend:manifest
+            quay.io/mmondics/national-parks-frontend:latest
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -161,7 +161,7 @@ spec:
       containers:
         - name: nationalparks
           image: >-
-            quay.io/mmondics/national-parks-backend:manifest
+            quay.io/mmondics/national-parks-backend:latest
           envFrom:
             - secretRef:
                 name: nationalparks-mongodb-parameters
