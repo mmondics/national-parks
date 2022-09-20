@@ -35,7 +35,7 @@ Note: if you want to use the OpenShift web console to deploy the application ins
 2. Deploy the full application (combined frontend and backend)
 
     ```text
-    oc create -f https://raw.githubusercontent.com/mmondics/national-parks/main/national-parks-combined.yaml
+    oc create -f https://raw.githubusercontent.com/mmondics/national-parks/main/yaml/combined/national-parks-combined.yaml
     ```
 
 3. Set the `NPROUTE` variable for use in the next step.
@@ -78,7 +78,8 @@ Some notable changes from the source repositories include:
 
 ## Tested Platforms
 - amd64: OCP versions 4.9.42, 4.10.22
-- s390x: OCP versions 4.8.46, 4.10.20
+- s390x: OCP versions 4.8.46, 4.9.45, 4.10.20
+  - includes OCP on zCX
 - ppc64le: OCP versions 4.10.24
   
 ## Troubleshooting
