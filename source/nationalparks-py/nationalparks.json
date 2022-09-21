@@ -107,7 +107,6 @@
 {"countryCode": "US", "countryName": "United States", "coordinates": [41.302152, -124.0472746], "name": "Redwood", "toponymName": "Redwood", "url": "https://www.nps.gov/redw/index.htm"}
 {"countryCode": "US", "countryName": "United States", "coordinates": [19.6787061, -156.0216995], "name": "Kaloko-Honokohau", "toponymName": "Kaloko-Honokohau", "url": "https://www.nps.gov/kaho/index.htm"}
 {"countryCode": "US", "countryName": "United States", "coordinates": [44.3385559, -68.2733346], "name": "Acadia", "toponymName": "Acadia", "url": "https://www.nps.gov/acad/index.htmite"}
-
 {"countryCode": "CA", "countryName": "Canada", "coordinates": [46.81033910000001, -64.9611539], "name": "Kouchibouguac National Park Of Canada", "toponymName": "Kouchibouguac National Park Of Canada", "url": "https://www.pc.gc.ca/en/pn-np/nb/kouchibouguac"}
 {"countryCode": "CA", "countryName": "Canada", "coordinates": [46.7696859, -72.9522173], "name": "La Mauricie National Park Of Canada", "toponymName": "La Mauricie National Park Of Canada", "url": "https://www.pc.gc.ca/en/pn-np/qc/mauricie"}
 {"countryCode": "CA", "countryName": "Canada", "coordinates": [53.5722647, -58.3476971], "name": "Akami-Uapishku - Kakkasuak - Mealy Mountains National Park Reserve Of Canada", "toponymName": "Akami-Uapishku - Kakkasuak - Mealy Mountains National Park Reserve Of Canada", "url": "https://www.pc.gc.ca/en/pn-np/nl/mealy"}
@@ -149,7 +148,6 @@
 {"countryCode": "CA", "countryName": "Canada", "coordinates": [49.0833333, -113.9166667], "name": "Waterton Lakes National Park Of Canada", "toponymName": "Waterton Lakes National Park Of Canada", "url": "https://www.pc.gc.ca/en/pn-np/ab/waterton"}
 {"countryCode": "CA", "countryName": "Canada", "coordinates": [59.4395031, -112.8764021], "name": "Wood Buffalo National Park Of Canada", "toponymName": "Wood Buffalo National Park Of Canada", "url": "https://www.pc.gc.ca/en/pn-np/nt/woodbuffalo"}
 {"countryCode": "CA", "countryName": "Canada", "coordinates": [51.4666667, -116.5833333], "name": "Yoho National Park Of Canada", "toponymName": "Yoho National Park Of Canada", "url": "https://www.pc.gc.ca/en/pn-np/bc/yoho"}
-
 {"countryCode": "MX", "countryName": "Mexico", "coordinates": [19.6633722, -101.0040111], "name": "Insurgente Jos\u00e9 Mar\u00eda Morelos", "toponymName": "Insurgente Jos\u00e9 Mar\u00eda Morelos", "url": "https://en.wikipedia.org/wiki/Insurgente_Jos%C3%A9_Mar%C3%ADa_Morelos_y_Pav%C3%B3n_National_Park"}
 {"countryCode": "MX", "countryName": "Mexico", "coordinates": [19.4723621, -99.2514626], "name": "Los Remedios", "toponymName": "Los Remedios", "url": "https://en.wikipedia.org/wiki/Los_Remedios_National_Park"}
 {"countryCode": "MX", "countryName": "Mexico", "coordinates": [23.783598, -103.807376], "name": "Sierra de \u00d3rganos", "toponymName": "Sierra de \u00d3rganos", "url": "https://en.wikipedia.org/wiki/Sierra_de_%C3%93rganos_National_Park"}
