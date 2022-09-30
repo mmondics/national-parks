@@ -50,7 +50,7 @@ Note: if you want to use the OpenShift web console to deploy the application ins
     curl http://$NPROUTE/ws/data/load
     ```
 
-    Note: you should see `"Items inserted in database: 109"` if you did everything right.
+    Note: you should see `"Items inserted in database: 204"` if you did everything right.
 
 5. Navigate to your `parksmap` route in a web browser. 
    
@@ -77,7 +77,8 @@ Some notable changes from the source repositories include:
 
 
 ## Tested Platforms
-- amd64: OCP versions 4.9.42, 4.10.22
+- amd64: OCP versions 4.9.42, 4.10.22, 4.11.5
+  - includes OCP local
 - s390x: OCP versions 4.8.46, 4.9.45, 4.10.20
   - includes OCP on zCX
 - ppc64le: OCP versions 4.10.24
