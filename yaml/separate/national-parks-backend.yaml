@@ -38,6 +38,7 @@ spec:
               protocol: TCP
           image: >-
             quay.io/mmondics/mongodb:3.6-manifest
+          imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -93,6 +94,7 @@ spec:
         - name: nationalparks
           image: >-
             quay.io/mmondics/national-parks-backend:manifest
+          imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: nationalparks-mongodb-parameters
