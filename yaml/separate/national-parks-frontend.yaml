@@ -33,6 +33,7 @@ spec:
         - name: parksmap
           image: >-
             quay.io/mmondics/national-parks-frontend:manifest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
               protocol: TCP
