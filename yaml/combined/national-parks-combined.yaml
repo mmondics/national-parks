@@ -107,6 +107,7 @@ spec:
               protocol: TCP
           image: >-
             quay.io/mmondics/mongodb:3.6-manifest
+          imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
