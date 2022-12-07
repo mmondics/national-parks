@@ -93,7 +93,7 @@ spec:
       containers:
         - name: nationalparks
           image: >-
-            quay.io/mmondics/national-parks-backend:manifest
+            quay.io/mmondics/national-parks-backend:instana-manifest
           imagePullPolicy: Always
           envFrom:
             - secretRef:
