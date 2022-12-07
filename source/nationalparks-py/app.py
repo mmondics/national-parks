@@ -1,3 +1,4 @@
+import instana
 import mod_wsgi.server
 
 mod_wsgi.server.start(

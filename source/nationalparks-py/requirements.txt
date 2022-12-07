@@ -5,3 +5,4 @@ pymongo
 itsdangerous
 Jinja2
 werkzeug
+instana
