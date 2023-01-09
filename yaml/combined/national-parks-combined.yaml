@@ -163,7 +163,7 @@ spec:
       containers:
         - name: nationalparks
           image: >-
-            quay.io/mmondics/national-parks-backend:v2-manifest
+            quay.io/mmondics/national-parks-backend:latest
           envFrom:
             - secretRef:
                 name: nationalparks-mongodb-parameters
