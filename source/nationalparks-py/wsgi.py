@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import instana
 import os
 import json
 import re

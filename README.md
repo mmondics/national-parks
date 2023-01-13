@@ -82,7 +82,7 @@ Some notable changes from the source repositories include:
 - s390x: OCP versions 4.8.46, 4.9.45, 4.10.20
   - includes OCP on zCX
 - ppc64le: OCP versions 4.10.24
-  
+
 ## Troubleshooting
 
 ### Cannot create a new project

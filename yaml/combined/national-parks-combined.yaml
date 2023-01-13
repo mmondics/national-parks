@@ -107,7 +107,7 @@ spec:
             - containerPort: 27017
               protocol: TCP
           image: >-
-            quay.io/mmondics/mongodb:3.6-manifest
+            docker.io/ibmcom/mongodb:3.6.0
           imagePullPolicy: Always
 ---
 apiVersion: v1
