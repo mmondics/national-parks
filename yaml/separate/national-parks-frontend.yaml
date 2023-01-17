@@ -32,7 +32,7 @@ spec:
       containers:
         - name: parksmap
           image: >-
-            quay.io/mmondics/national-parks-frontend:manifest
+            quay.io/mmondics/national-parks-frontend:v2-instana-manifest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -32,7 +32,7 @@ spec:
       containers:
         - name: parksmap
           image: >-
-            quay.io/mmondics/national-parks-frontend:latest
+            quay.io/mmondics/national-parks-frontend:v2-instana-manifest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -163,7 +163,7 @@ spec:
       containers:
         - name: nationalparks
           image: >-
-            quay.io/mmondics/national-parks-backend:instana-manifest
+            quay.io/mmondics/national-parks-backend:v2-instana-manifest
           envFrom:
             - secretRef:
                 name: nationalparks-mongodb-parameters
