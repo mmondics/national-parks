@@ -15,6 +15,7 @@ This application is made up of a frontend with source code [here](https://github
     - [Cannot create a new project](#cannot-create-a-new-project)
     - [Cannot access the Parksmap application in step 5](#cannot-access-the-parksmap-application-in-step-5)
     - [I messed up somewhere. Can I delete everything and try again?](#i-messed-up-somewhere-can-i-delete-everything-and-try-again)
+  - [Can this application be monitored by Instana?](#can-this-application-be-monitored-by-instana)
     - [I don't have access to the `oc` CLI / I don't know how to use the `oc` CLI](#i-dont-have-access-to-the-oc-cli--i-dont-know-how-to-use-the-oc-cli)
 
 ## Requirements
@@ -120,6 +121,14 @@ Yes, delete the `national-parks` project, wait a few minutes for the objects to 
 
 ```text
 oc delete project national-parks
+```
+
+## Can this application be monitored by Instana?
+
+There is an Instana-ready version of this application built. When deploying, use the YAML files contained in the `instana` branch of this repository.
+
+```text
+oc create -f https://raw.githubusercontent.com/mmondics/national-parks/instana/yaml/combined/national-parks-combined.yaml
 ```
 
 ### I don't have access to the `oc` CLI / I don't know how to use the `oc` CLI
