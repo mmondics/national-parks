@@ -77,11 +77,11 @@ Some notable changes from the source repositories include:
 
 
 ## Tested Platforms
-- amd64: OCP versions 4.9.42, 4.10.22, 4.11.5
+- amd64
   - includes OCP local
-- s390x: OCP versions 4.8.46, 4.9.45, 4.10.20
+- s390x
   - includes OCP on zCX
-- ppc64le: OCP versions 4.10.24
+- ppc64le
   
 ## Troubleshooting
 
