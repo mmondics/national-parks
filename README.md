@@ -38,21 +38,15 @@ Note: if you want to use the OpenShift web console to deploy the application ins
     oc create -f https://raw.githubusercontent.com/mmondics/national-parks/main/yaml/combined/national-parks-combined.yaml
     ```
 
-3. Set the `NPROUTE` variable for use in the next step.
+3. Load the backend database with data.
 
     ```text
-    NPROUTE=$(oc get route nationalparks -n national-parks -o=jsonpath='{.spec.host}')
-    ```
-
-4. Load the backend database with data.
-
-    ```text
-    curl http://$NPROUTE/ws/data/load
+    oc exec $(oc get pods -l component=nationalparks | tail -n 1 | awk '{print $1;}') -- curl -s http://localhost:8080/ws/data/load
     ```
 
     Note: you should see `"Items inserted in database: 204"` if you did everything right.
 
-5. Navigate to your `parksmap` route in a web browser. 
+4. Navigate to your `parksmap` route in a web browser. 
    
    You can print the URL with the command.
 
