@@ -33,7 +33,7 @@ spec:
         - name: parksmap
           image: >-
             quay.io/mmondics/national-parks-frontend:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -108,7 +108,7 @@ spec:
               protocol: TCP
           image: >-
             quay.io/mmondics/mongodb:3.6-manifest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1
 kind: Service
@@ -167,7 +167,7 @@ spec:
           envFrom:
             - secretRef:
                 name: nationalparks-mongodb-parameters
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               protocol: TCP
