@@ -40,7 +40,7 @@ spec:
 #              drop:
 #                - ALL
           image: >-
-            quay.io/mmondics/national-parks-frontend:v2-update
+            quay.io/mmondics/national-parks-frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
