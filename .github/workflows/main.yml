@@ -68,10 +68,10 @@ jobs:
       id: checkout
       uses: actions/checkout@v2
 
-    - name: Install Podman
+    - name: Docker Setup Docker
       # You may pin to the exact commit or the version.
-      # uses: gacts/install-podman@5c62fd3b64e51d0b0f650d0549197a4b4e63e4ca
-      uses: gacts/install-podman@v1.1.0
+      # uses: crazy-max/ghaction-setup-docker@92e1039e6dabc017c82129984e156d180d7a0ce3
+      uses: crazy-max/ghaction-setup-docker@v1.1.0
     
     - name: podman build
       run: |
