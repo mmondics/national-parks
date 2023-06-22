@@ -1,0 +1,124 @@
+name: Build and Rollout Multiarchitecture Containers
+
+env: 
+  IMAGE_REGISTRY: quay.io/mmondics
+  QUAY_USER: matt.mondics-ibm
+  QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+  OCPZ_SERVER: ${{ secrets.OCPZ_SERVER }}
+  OCPX_SERVER: ${{ secrets.OCPX_SERVER }}
+  OCPZ_TOKEN: ${{ secrets.OCPZ_TOKEN }}
+  OCPX_TOKEN: ${{ secrets.OCPX_TOKEN }}
+  OPENSHIFT_NAMESPACE: national-parks
+  APP_NAME: nationalparks
+  IMAGE_TAGS: latest ${{ github.sha }}
+  APP_PORT: "8080"
+  MANIFEST_NAME: nationalparks-manifest
+
+on:
+  # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows
+  push: 
+    branches: [ main ]
+
+jobs:
+  build-and-push: 
+    name: s390x build and push to quay.io
+    runs-on: [self-hosted, linux, s390x]
+    environment: openshift
+
+    outputs:
+        ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
+        SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
+
+    steps:
+    - name: Check if secrets exists
+      uses: actions/github-script@v3
+      with:
+        script: |
+          const secrets = {
+            QUAY_PASSWORD: `${{ secrets.QUAY_PASSWORD }}`,
+            OCPZ_SERVER: `${{ secrets.OCPZ_SERVER }}`,
+            OCPZ_TOKEN: `${{ secrets.OCPZ_TOKEN }}`,
+            OCPX_SERVER: `${{ secrets.OCPX_SERVER }}`,
+            OCPX_TOKEN: `${{ secrets.OCPX_TOKEN }}`,
+
+          };
+
+          const missingSecrets = Object.entries(secrets).filter(([ name, value ]) => {
+            if (value.length === 0) {
+              core.warning(`Secret "${name}" is not set`);
+              return true;
+            }
+            core.info(`✔️ Secret "${name}" is set`);
+            return false;
+
+          });
+
+          if (missingSecrets.length > 0) {
+            core.setFailed(`❌ At least one required secret is not set in the repository. \n` +
+              "You can add it using:\n" +
+              "GitHub UI: https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository \n" +
+              "GitHub CLI: https://cli.github.com/manual/gh_secret_set \n" +
+              "Also, refer to https://github.com/redhat-actions/oc-login#getting-started-with-the-action-or-see-example");
+          }
+          else {
+            core.info(`✅ All the required secrets are set`);
+          }
+
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v2
+
+   # https://github.com/redhat-actions/buildah-build#readme
+    - name: Build from Dockerfile
+      id: image-build
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ env.APP_NAME }}
+        tags: ${{ env.IMAGE_TAGS }}
+        # If you don't have a dockerfile, see:
+        # https://github.com/redhat-actions/buildah-build#scratch-build-inputs
+        # Otherwise, point this to your Dockerfile relative to the repository root.
+        dockerfiles: |
+          ./source/nationalparks-py/Dockerfile
+
+    # https://github.com/redhat-actions/push-to-registry#readme
+    - name: Push to Registry 
+      id: push-to-registry
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ env.APP_NAME }}
+        tags: ${{ env.IMAGE_TAGS }}
+        registry: ${{ env.IMAGE_REGISTRY }}
+        username: ${{ env.QUAY_USER }}
+        password: ${{ env.QUAY_PASSWORD }}
+
+    # The path the image was pushed to is now stored in ${{ steps.push-to-registry.outputs.registry-path }}
+
+    # https://github.com/redhat-actions/oc-login#readme
+    - name: Log in to OpenShift 
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ env.OCPZ_SERVER }}
+        openshift_token: ${{ env.OCPZ_TOKEN }}
+        insecure_skip_tls_verify: true
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+
+# Run a script to create a new app or update the current one with the previously pushed container image
+  create-manifest:
+    name: combine amd64 and s390x container images into a single manifest and push to quay.io
+    runs-on: ubuntu-18.04
+    environment: openshift
+    
+      steps:
+        - name: create manifest list
+          run: |
+            podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
+        - name: pull new container images
+          run: |
+            podman pull ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
+        - name: add container images to manifest
+          run: |
+            podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
+        - name: push manifest list
+          run: |
+            podman manifest push ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
