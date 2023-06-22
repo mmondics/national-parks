@@ -70,8 +70,7 @@ jobs:
     
     - name: podman build
       run: |
-        podman unshare cat /proc/self/uid_map
-        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/Dockerfile
+        sudo podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/Dockerfile
 
 #   # https://github.com/redhat-actions/buildah-build#readme
 #    - name: Build from Dockerfile
