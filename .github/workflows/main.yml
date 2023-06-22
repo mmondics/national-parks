@@ -77,7 +77,7 @@ jobs:
       id: image-build
       uses: redhat-actions/buildah-build@v2
       with:
-        extra-args: --isolation chroot --security-opt label=disable --security-opt seccomp=unconfined --cap-add SYS_ADMIN
+#        extra-args: --isolation chroot --security-opt label=disable --security-opt seccomp=unconfined --cap-add SYS_ADMIN
         image: ${{ env.APP_NAME }}
         tags: ${{ env.IMAGE_TAGS }}
         # If you don't have a dockerfile, see:
