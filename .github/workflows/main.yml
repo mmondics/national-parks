@@ -67,6 +67,11 @@ jobs:
     - name: Checkout
       id: checkout
       uses: actions/checkout@v2
+
+    - name: Install Podman
+      # You may pin to the exact commit or the version.
+      # uses: gacts/install-podman@5c62fd3b64e51d0b0f650d0549197a4b4e63e4ca
+      uses: gacts/install-podman@v1.1.0
     
     - name: podman build
       run: |
