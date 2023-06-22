@@ -70,7 +70,9 @@ jobs:
     
     - name: podman build
       run: |
-        podman build --privileged -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/Dockerfile
+        chmod 4755 /usr/bin/newgidmap
+        chmod 4755 /usr/bin/newuidmap
+        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/Dockerfile
 
 #   # https://github.com/redhat-actions/buildah-build#readme
 #    - name: Build from Dockerfile
