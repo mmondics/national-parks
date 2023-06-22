@@ -10,7 +10,7 @@ env:
   OCPX_TOKEN: ${{ secrets.OCPX_TOKEN }}
   OPENSHIFT_NAMESPACE: national-parks
   APP_NAME: nationalparks
-  IMAGE_TAGS: latest ${{ github.sha }}
+  IMAGE_TAGS: ${{ github.sha }}
   APP_PORT: "8080"
   MANIFEST_NAME: nationalparks-manifest
 
