@@ -109,16 +109,16 @@ jobs:
     runs-on: ubuntu-18.04
     environment: openshift
     
-      steps:
-        - name: create manifest list
-          run: |
-            podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
-        - name: pull new container images
-          run: |
-            podman pull ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
-        - name: add container images to manifest
-          run: |
-            podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
-        - name: push manifest list
-          run: |
-            podman manifest push ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
+    steps:
+      - name: create manifest list
+        run: |
+          podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
+      - name: pull new container images
+        run: |
+          podman pull ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
+      - name: add container images to manifest
+        run: |
+          podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
+      - name: push manifest list
+        run: |
+          podman manifest push ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
