@@ -68,15 +68,15 @@ jobs:
       id: checkout
       uses: actions/checkout@v2
 
-   # https://github.com/redhat-actions/s2i-build#readme
-    - name: S2I Build 
-      id: build_image
-      uses: redhat-actions/s2i-build@v2
-      with:
-        path_context: './source/nationalparks-py'
-        builder_image: 'registry.redhat.io/rhel8/python-38'
-        image: ${{ env.APP_NAME }}
-        tags: ${{ env.IMAGE_TAGS }}
+#   # https://github.com/redhat-actions/s2i-build#readme
+#    - name: S2I Build 
+#      id: build_image
+#      uses: redhat-actions/s2i-build@v2
+#      with:
+#        path_context: './source/nationalparks-py'
+#        builder_image: 'registry.redhat.io/rhel8/python-38'
+#        image: ${{ env.APP_NAME }}
+#        tags: ${{ env.IMAGE_TAGS }}
         
 #    - name: Docker Setup Docker
 #      # You may pin to the exact commit or the version.
@@ -85,10 +85,10 @@ jobs:
 #      with:
 #        version: 18.06.03-ce
     
-#    - name: podman build
-#      run: |
-#        podman version
-#        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/Dockerfile
+    - name: podman build
+      run: |
+        podman version
+        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/Dockerfile
 
 #   # https://github.com/redhat-actions/buildah-build#readme
 #    - name: Build from Dockerfile
