@@ -2,7 +2,9 @@ name: Build and Rollout Multiarchitecture Containers
 
 env: 
   IMAGE_REGISTRY: quay.io/mmondics
-  QUAY_USER: matt.mondics-ibm
+  QUAY_USER: ${{ secrets.QUAY_USER }}
+  REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
+  REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
   QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
   OCPZ_SERVER: ${{ secrets.OCPZ_SERVER }}
   OCPX_SERVER: ${{ secrets.OCPX_SERVER }}
@@ -40,7 +42,9 @@ jobs:
             OCPZ_TOKEN: `${{ secrets.OCPZ_TOKEN }}`,
             OCPX_SERVER: `${{ secrets.OCPX_SERVER }}`,
             OCPX_TOKEN: `${{ secrets.OCPX_TOKEN }}`,
-
+            QUAY_USER: `${{ secrets.QUAY_USER }}`,
+            REDHAT_USERNAME: `${{ secrets.REDHAT_USERNAME }}`,
+            REDHAT_PASSWORD: `${{ secrets.REDHAT_PASSWORD }}`,
           };
 
           const missingSecrets = Object.entries(secrets).filter(([ name, value ]) => {
@@ -67,41 +71,12 @@ jobs:
     - name: Checkout
       id: checkout
       uses: actions/checkout@v2
-
-#   # https://github.com/redhat-actions/s2i-build#readme
-#    - name: S2I Build 
-#      id: build_image
-#      uses: redhat-actions/s2i-build@v2
-#      with:
-#        path_context: './source/nationalparks-py'
-#        builder_image: 'registry.redhat.io/rhel8/python-38'
-#        image: ${{ env.APP_NAME }}
-#        tags: ${{ env.IMAGE_TAGS }}
-        
-#    - name: Docker Setup Docker
-#      # You may pin to the exact commit or the version.
-#      # uses: crazy-max/ghaction-setup-docker@92e1039e6dabc017c82129984e156d180d7a0ce3
-#      uses: crazy-max/ghaction-setup-docker@v1.1.0
-#      with:
-#        version: 18.06.03-ce
     
     - name: podman build
       run: |
         podman version
+        podman login registry.redhat.io -u ${{ secrets.REDHAT_USERNAME }} -p ${{ secrets.REDHAT_PASSWORD }}
         podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/
-
-#   # https://github.com/redhat-actions/buildah-build#readme
-#    - name: Build from Dockerfile
-#      id: image-build
-#      uses: redhat-actions/buildah-build@v2
-#      with:
-#        image: ${{ env.APP_NAME }}
-#        tags: ${{ env.IMAGE_TAGS }}
-#        # If you don't have a dockerfile, see:
-#        # https://github.com/redhat-actions/buildah-build#scratch-build-inputs
-#        # Otherwise, point this to your Dockerfile relative to the repository root.
-#        dockerfiles: |
-#          ./source/nationalparks-py/Dockerfile
 
     # https://github.com/redhat-actions/push-to-registry#readme
     - name: Push to Registry 
