@@ -2,7 +2,7 @@ name: Build and Rollout Multiarchitecture Containers
 
 env: 
   IMAGE_REGISTRY: quay.io/mmondics
-  QUAY_USER: ${{ secrets.QUAY_USER }}
+  QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
   REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
   REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
   QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
@@ -42,7 +42,7 @@ jobs:
             OCPZ_TOKEN: `${{ secrets.OCPZ_TOKEN }}`,
             OCPX_SERVER: `${{ secrets.OCPX_SERVER }}`,
             OCPX_TOKEN: `${{ secrets.OCPX_TOKEN }}`,
-            QUAY_USER: `${{ secrets.QUAY_USER }}`,
+            QUAY_USERNAME: `${{ secrets.QUAY_USERNAME }}`,
             REDHAT_USERNAME: `${{ secrets.REDHAT_USERNAME }}`,
             REDHAT_PASSWORD: `${{ secrets.REDHAT_PASSWORD }}`,
           };
@@ -86,7 +86,7 @@ jobs:
         image: ${{ env.APP_NAME }}
         tags: ${{ env.IMAGE_TAGS }}
         registry: ${{ env.IMAGE_REGISTRY }}
-        username: ${{ env.QUAY_USER }}
+        username: ${{ env.QUAY_USERNAME }}
         password: ${{ env.QUAY_PASSWORD }}
 
     # The path the image was pushed to is now stored in ${{ steps.push-to-registry.outputs.registry-path }}
