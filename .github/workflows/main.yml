@@ -212,3 +212,26 @@ jobs:
       - name: push manifest list
         run: |
           podman manifest push ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
+  
+  update-app-yaml:
+    name: update nationalparks application YAML to use new manifest image
+    runs-on: ubuntu-latest
+    needs: create-manifest
+    environment: openshift
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3.5.3
+      - name: one liner to replace container image in YAML
+        run: |
+          sed -i '183s/.*/            quay.io/mmondics/national-parks-backend:latest/' ./yaml/combined/national-parks-combined.yaml
+      - name: check for changes
+        run: git status
+      - name: stage changed files
+        run: git add .
+      - name: commit changed files
+        run: git commit -m "national-parks-combined.yaml"
+      - name: fetch from main
+        run: git fetch origin main
+      - name: push code to master
+        run: git push origin HEAD:main
