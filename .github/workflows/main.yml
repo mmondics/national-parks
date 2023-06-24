@@ -111,7 +111,7 @@ jobs:
 # Run a script to create a new app or update the current one with the previously pushed container image
   create-manifest:
     name: combine amd64 and s390x container images into a single manifest and push to quay.io
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     environment: openshift
     
     steps:
