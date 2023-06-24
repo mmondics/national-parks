@@ -99,14 +99,14 @@ jobs:
 
     # The path the image was pushed to is now stored in ${{ steps.push-to-registry.outputs.registry-path }}
 
-    # https://github.com/redhat-actions/oc-login#readme
-    - name: Log in to OpenShift 
-      uses: redhat-actions/oc-login@v1
-      with:
-        openshift_server_url: ${{ env.OCPZ_SERVER }}
-        openshift_token: ${{ env.OCPZ_TOKEN }}
-        insecure_skip_tls_verify: true
-        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+#    # https://github.com/redhat-actions/oc-login#readme
+#    - name: Log in to OpenShift 
+#      uses: redhat-actions/oc-login@v1
+#      with:
+#        openshift_server_url: ${{ env.OCPZ_SERVER }}
+#        openshift_token: ${{ env.OCPZ_TOKEN }}
+#        insecure_skip_tls_verify: true
+#        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
 
 # Run a script to create a new app or update the current one with the previously pushed container image
   create-manifest:
