@@ -72,19 +72,19 @@ jobs:
       id: checkout
       uses: actions/checkout@v2
 
-    - name: Buildah Action
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: ${{ env.APP_NAME }}
-        tags: ${{ github.sha }}
-        containerfiles: |
-          ./source/nationalparks-py/Dockerfile
+#    - name: Buildah Action
+#      uses: redhat-actions/buildah-build@v2
+#      with:
+#        image: ${{ env.APP_NAME }}
+#        tags: ${{ github.sha }}
+#        containerfiles: |
+#          ./source/nationalparks-py/Dockerfile
 
-#    - name: podman build
-#      run: |
-#        podman version
-#        podman login registry.redhat.io -u ${{ secrets.REDHAT_USERNAME }} -p ${{ secrets.REDHAT_PASSWORD }}
-#        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/
+    - name: podman build
+      run: |
+        podman version
+        podman login registry.redhat.io -u ${{ secrets.REDHAT_USERNAME }} -p ${{ secrets.REDHAT_PASSWORD }}
+        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/
 
     # https://github.com/redhat-actions/push-to-registry#readme
     - name: Push to Registry 
