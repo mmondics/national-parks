@@ -12,9 +12,11 @@ env:
   OCPX_TOKEN: ${{ secrets.OCPX_TOKEN }}
   OPENSHIFT_NAMESPACE: national-parks
   APP_NAME: nationalparks
-  IMAGE_TAGS: ${{ github.sha }}
+  Z_IMAGE_TAGS: s390x-${{ github.sha }}
+  X_IMAGE_TAGS: amd64-${{ github.sha }}
   APP_PORT: "8080"
   MANIFEST_NAME: nationalparks-manifest
+  MANIFEST_IMAGE_TAG: manifest-${{ github.sha }}
 
 on:
   # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows
@@ -84,7 +86,7 @@ jobs:
       run: |
         podman version
         podman login registry.redhat.io -u ${{ secrets.REDHAT_USERNAME }} -p ${{ secrets.REDHAT_PASSWORD }}
-        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/
+        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.Z_IMAGE_TAGS }} ./source/nationalparks-py/
 
     # https://github.com/redhat-actions/push-to-registry#readme
     - name: Push to Registry 
@@ -92,7 +94,7 @@ jobs:
       uses: redhat-actions/push-to-registry@v2
       with:
         image: ${{ env.APP_NAME }}
-        tags: ${{ env.IMAGE_TAGS }}
+        tags: ${{ env.Z_IMAGE_TAGS }}
         registry: ${{ env.IMAGE_REGISTRY }}
         username: ${{ env.QUAY_USERNAME }}
         password: ${{ env.QUAY_PASSWORD }}
@@ -159,7 +161,7 @@ jobs:
       run: |
         podman version
         podman login registry.redhat.io -u ${{ secrets.REDHAT_USERNAME }} -p ${{ secrets.REDHAT_PASSWORD }}
-        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} ./source/nationalparks-py/
+        podman build -t ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.X_IMAGE_TAGS }} ./source/nationalparks-py/
 
     # https://github.com/redhat-actions/push-to-registry#readme
     - name: Push to Registry 
@@ -167,7 +169,7 @@ jobs:
       uses: redhat-actions/push-to-registry@v2
       with:
         image: ${{ env.APP_NAME }}
-        tags: ${{ env.IMAGE_TAGS }}
+        tags: ${{ env.X_IMAGE_TAGS }}
         registry: ${{ env.IMAGE_REGISTRY }}
         username: ${{ env.QUAY_USERNAME }}
         password: ${{ env.QUAY_PASSWORD }}
@@ -198,13 +200,15 @@ jobs:
           podman login ${{ env.IMAGE_REGISTRY }} -u ${{ env.QUAY_USERNAME }} -p ${{ env.QUAY_PASSWORD }}
       - name: create manifest list
         run: |
-          podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
+          podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
       - name: pull new container images
         run: |
-          podman pull ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
+          podman pull ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.Z_IMAGE_TAGS }}
+          podman pull ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.X_IMAGE_TAGS }}
       - name: add container images to manifest
         run: |
-          podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
+          podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.Z_IMAGE_TAGS }}
+          podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.X_IMAGE_TAGS }}
       - name: push manifest list
         run: |
           podman manifest push ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }} ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.IMAGE_TAGS }}
