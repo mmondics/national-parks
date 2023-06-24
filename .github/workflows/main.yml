@@ -112,6 +112,7 @@ jobs:
   create-manifest:
     name: combine amd64 and s390x container images into a single manifest and push to quay.io
     runs-on: ubuntu-latest
+    needs: build-and-push
     environment: openshift
     
     steps:
