@@ -1,7 +1,7 @@
 name: Build and Rollout Multiarchitecture Containers
 
 env: 
-  IMAGE_REGISTRY: quay.io/mmondics
+  IMAGE_REGISTRY: quay.io\/mmondics
   QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
   REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
   REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
