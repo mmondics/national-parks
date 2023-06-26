@@ -17,7 +17,8 @@ env:
   
 on:
   push: 
-    branches: [ main ]
+    paths:
+      - source/nationalparks-py/*
 
 jobs:
   s390x-build-and-push: 
