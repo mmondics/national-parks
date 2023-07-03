@@ -188,7 +188,6 @@ jobs:
       - name: push code to master
         run: git push origin HEAD:main
 
-jobs:
   acs-image-scan: 
     name: Scan container manifest with Red Hat Advanced Cluster Security
     runs-on: [self-hosted, linux, x64]
