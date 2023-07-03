@@ -10,8 +10,9 @@ env:
   Z_IMAGE_TAGS: s390x-${{ github.sha }}
   X_IMAGE_TAGS: amd64-${{ github.sha }}
   MANIFEST_IMAGE_TAG: manifest-${{ github.sha }}
-  ROX_CENTRAL_ADDRESS: ${{ secrets.rox_address }}
-  
+  ROX_CENTRAL_ADDRESS: ${{ secrets.ROX_ADDRESS }}
+  ROX_API_TOKEN: ${{ secrets.ROX_API_TOKEN }}
+
   IMAGE_REGISTRY: quay.io/mmondics
   APP_NAME: nationalparks
   MANIFEST_NAME: nationalparks-manifest
