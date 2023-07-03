@@ -10,6 +10,7 @@ env:
   Z_IMAGE_TAGS: s390x-${{ github.sha }}
   X_IMAGE_TAGS: amd64-${{ github.sha }}
   MANIFEST_IMAGE_TAG: manifest-${{ github.sha }}
+  ROX_CENTRAL_ADDRESS: ${{ secrets.rox_address }}
   
   IMAGE_REGISTRY: quay.io/mmondics
   APP_NAME: nationalparks
@@ -147,11 +148,9 @@ jobs:
     
     steps:
       - name: podman login
-        run: |
-          podman login ${{ env.IMAGE_REGISTRY }} -u ${{ env.QUAY_USERNAME }} -p ${{ env.QUAY_PASSWORD }}
+        run: podman login ${{ env.IMAGE_REGISTRY }} -u ${{ env.QUAY_USERNAME }} -p ${{ env.QUAY_PASSWORD }}
       - name: create manifest list
-        run: |
-          podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
+        run: podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
       - name: pull new container images
         run: |
           podman pull ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.Z_IMAGE_TAGS }}
@@ -161,8 +160,7 @@ jobs:
           podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.Z_IMAGE_TAGS }}
           podman manifest add ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} ${{ env.IMAGE_REGISTRY }}/${{ env.APP_NAME }}:${{ env.X_IMAGE_TAGS }}
       - name: push manifest list
-        run: |
-          podman manifest push ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
+        run: podman manifest push ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
   
   update-app-yaml:
     name: update nationalparks application YAML to use new manifest image
@@ -174,8 +172,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3.5.3
       - name: one liner to replace container image in YAML
-        run: |
-          sed -i '183s@.*@           ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}@' ./yaml/combined/national-parks-combined.yaml
+        run: sed -i '183s@.*@           ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}@' ./yaml/combined/national-parks-combined.yaml
       - name: git config
         run: |
           git config --global user.email ${{ env.GIT_EMAIL }}
@@ -190,3 +187,23 @@ jobs:
         run: git fetch origin main
       - name: push code to master
         run: git push origin HEAD:main
+
+jobs:
+  acs-image-scan: 
+    name: Scan container manifest with Red Hat Advanced Cluster Security
+    runs-on: [self-hosted, linux, x64]
+    environment: openshift
+    
+    steps:
+    - name: install roxctl cli
+      run: |
+        mkdir actions-runner && cd actions-runner
+        curl -o actions-runner-linux-x64-2.305.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.305.0/actions-runner-linux-x64-2.305.0.tar.gz
+        tar xzf ./actions-runner-linux-x64-2.305.0.tar.gz
+        ./config.sh --unattended --url https://github.com/mmondics/national-parks --token ${{ env.GITHUB_TOKEN }}
+        ./run.sh --unattended
+
+    - name: scan container manifest
+      run: |
+        export ROX_API_TOKEN=${{ env.ROX_API_TOKEN }}
+        roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_ADDRESS }} --image  ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
