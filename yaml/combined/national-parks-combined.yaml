@@ -180,7 +180,7 @@ spec:
       containers:
         - name: nationalparks
           image: >-
-           quay.io/mmondics/nationalparks-manifest:manifest-90ba2bf86fa905c179319fee44a79a18d9cbf1e5
+           quay.io/mmondics/nationalparks-manifest:manifest-e7dd18009cdab4b3665a18bf791604ec902b714b
           envFrom:
             - secretRef:
                 name: nationalparks-mongodb-parameters
