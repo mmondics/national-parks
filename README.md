@@ -153,5 +153,3 @@ You can deploy this application via the OpenShift web console.
 You should now see the National Parks map with US locations loaded.
 
 ![national-parks-loaded-home](https://raw.githubusercontent.com/mmondics/media/main/images/national-parks-loaded-home.png)
-
-####(Testing actions)
