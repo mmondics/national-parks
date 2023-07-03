@@ -198,6 +198,7 @@ jobs:
     steps:
     - name: scan manifest with roxctl
       run: |
+        podman login registry.redhat.io -u ${{ secrets.REDHAT_USERNAME }} -p ${{ secrets.REDHAT_PASSWORD }}
         podman run --privileged -e ROX_API_TOKEN=${{ env.ROX_API_TOKEN }} \
         -it registry.redhat.io/advanced-cluster-security/rhacs-roxctl-rhel8:4.1.0 \
         -e ${{ env.ROX_CENTRAL_ADDRESS }} \
