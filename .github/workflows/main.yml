@@ -190,6 +190,7 @@ jobs:
 
   acs-image-scan: 
     name: Scan container manifest with Red Hat Advanced Cluster Security
+    needs: update-app-yaml
     runs-on: [self-hosted, linux, x64]
     environment: openshift
     
