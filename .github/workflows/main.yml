@@ -196,10 +196,12 @@ jobs:
     environment: openshift
     
     steps:
+    - name: install roxctl cli
+      run: | 
+        curl -O https://mirror.openshift.com/pub/rhacs/assets/4.1.0/bin/Linux/roxctl
+        chmod +x roxctl
+        mv ./roxctl /usr/local/bin
     - name: scan manifest with roxctl
       run: |
-        podman login registry.redhat.io -u ${{ secrets.REDHAT_USERNAME }} -p ${{ secrets.REDHAT_PASSWORD }}
-        podman run --privileged -e ROX_API_TOKEN=${{ env.ROX_API_TOKEN }} \
-        -it registry.redhat.io/advanced-cluster-security/rhacs-roxctl-rhel8:4.1.0 \
-        -e ${{ env.ROX_CENTRAL_ADDRESS }} \
-        image check --image=${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
+        TOKEN=${{ env.ROX_API_TOKEN }}
+        roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
