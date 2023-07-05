@@ -196,11 +196,9 @@ jobs:
     environment: openshift
     
     steps:
-    - name: install roxctl cli
+    - name: install roxctl cli and scan manifest
       run: | 
         curl -O https://mirror.openshift.com/pub/rhacs/assets/4.1.0/bin/Linux/roxctl
         chmod +x roxctl
-    - name: scan manifest with roxctl
-      run: |
         TOKEN=${{ env.ROX_API_TOKEN }}
-        roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
+        ./roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}
