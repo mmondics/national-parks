@@ -27,7 +27,7 @@ jobs:
     environment: openshift
     continue-on-error: true
     outputs:
-      output1: ${{ steps.step1.outputs.test }}
+      output1: ${{ steps.step1.outputs }}
     
     steps:
     - name: install roxctl cli and scan manifest
