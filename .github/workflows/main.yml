@@ -200,7 +200,6 @@ jobs:
       run: | 
         curl -O https://mirror.openshift.com/pub/rhacs/assets/4.1.0/bin/Linux/roxctl
         chmod +x roxctl
-        mv ./roxctl /usr/local/bin
     - name: scan manifest with roxctl
       run: |
         TOKEN=${{ env.ROX_API_TOKEN }}
