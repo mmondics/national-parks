@@ -21,7 +21,7 @@ env:
   SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
   
 on:
-  push: 
+  push:
     paths:
       - source/nationalparks-py/*
 
@@ -196,6 +196,7 @@ jobs:
     name: Scan container manifest with Red Hat Advanced Cluster Security
     runs-on: [self-hosted, linux, x64]
     environment: openshift
+    needs: update-app-yaml
     continue-on-error: true
     
     steps:
