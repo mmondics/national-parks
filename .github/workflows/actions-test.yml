@@ -85,5 +85,3 @@ jobs:
         #convert_markdown: # optional
         # Files that will be added to mail message attachments (separated with comma)
         attachments: deployment_check.txt, image_scan.json, image_check.txt
-        # Set Priority level for the mail message to 'high', 'normal' (default) or 'low'
-        #priority: # optional
