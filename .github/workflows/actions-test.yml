@@ -20,7 +20,8 @@ env:
   SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
   SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
   
-on: push
+on: workflow_dispatch # run action manually
+#on: push # run action on any push
 
 jobs:
 
