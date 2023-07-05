@@ -32,6 +32,9 @@ jobs:
       run: | 
         curl -O https://mirror.openshift.com/pub/rhacs/assets/4.1.0/bin/Linux/roxctl
         chmod +x roxctl
+    - name: deployment-check
+      run: |
+        ./roxctl --insecure-skip-tls-verify deployment check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} -f yaml/combined/national-parks-combined.yaml 2>&1 | tee image_scan.json
     - name: image-scan
       run: |
         ./roxctl --insecure-skip-tls-verify image scan --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image quay.io/centos7/httpd-24-centos7:centos7 2>&1 | tee image_scan.json
