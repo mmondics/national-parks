@@ -23,7 +23,7 @@ jobs:
 
   acs-image-scan: 
     name: Scan container manifest with Red Hat Advanced Cluster Security
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     environment: openshift
     continue-on-error: true
     outputs:
