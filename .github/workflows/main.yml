@@ -1,4 +1,4 @@
-name: Build and Rollout Multiarchitecture Containers
+name: Build, Scan and Rollout Multiarchitecture Containers
 
 env: 
   QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
@@ -16,6 +16,9 @@ env:
   IMAGE_REGISTRY: quay.io/mmondics
   APP_NAME: nationalparks
   MANIFEST_NAME: nationalparks-manifest
+
+  SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
   
 on:
   push: 
@@ -202,10 +205,57 @@ jobs:
         chmod +x roxctl
     - name: deployment-check
       run: |
-        ./roxctl --insecure-skip-tls-verify deployment check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} -f yaml/combined/national-parks-combined.yaml 2>&1 | tee image_scan.json
+        ./roxctl --insecure-skip-tls-verify deployment check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} -f yaml/combined/national-parks-combined.yaml 2>&1 | tee deployment_check.txt
     - name: image-scan
       run: |
-        ./roxctl --insecure-skip-tls-verify image scan --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} 2>&1 | tee image_scan.json
+        ./roxctl --insecure-skip-tls-verify image scan --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}@ 2>&1 | tee image_scan.json
     - name: image-check
       run: |
-        ./roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }} 2>&1 | tee image_check.txt
+        ./roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image ${{ env.IMAGE_REGISTRY }}/${{ env.MANIFEST_NAME }}:${{ env.MANIFEST_IMAGE_TAG }}@ 2>&1 | tee image_check.txt
+    - name: Send email 
+      # You may pin to the exact commit or the version.
+      # uses: dawidd6/action-send-mail@fa73d6accd067d4151b71f124ed939da15097abf
+      uses: dawidd6/action-send-mail@v3.7.2
+      with:
+        # Connection URL protocol://user:password@server:port, protocol can be smtp or smtp+starttls, replaces server_address, server_port, secure, username and password
+        #connection_url: # optional
+        # SMTP server address
+        server_address: smtp.gmail.com
+        # SMTP server port
+        server_port: 465
+        # Whether this connection use TLS (default is true if server_port is 465)
+        secure: true
+        # Authenticate as this user to SMTP server
+        username: ${{ env.SMTP_USERNAME }}
+        # Authenticate with this password to SMTP server
+        password: ${{ env.SMTP_PASSWORD }}
+        # Subject of mail message
+        subject: Security Scan for quay.io/centos7/httpd-24-centos7:centos7
+        # Recipients mail addresses (separated with comma)
+        to: matt.mondics@ibm.com
+        # Full name of mail sender (might be with an email address specified in <>)
+        from: Matt Mondics <matt.mondics@ibm.com>
+        # Body of mail message (might be a filename prefixed with file:// to read from)
+        body: |
+          See attachments for deployment check, image check, and image scan.
+          
+          Update the application code to remediate security findings described in the attached files.
+          
+          Per IBM security practices, failed security scans do not prevent commits to development branches, but they will prevent merging to main branches.
+          
+        # HTML body of mail message (might be a filename prefixed with file:// to read from)
+        #html_body: # optional
+        # Carbon copy recipients (separated with comma)
+        #cc: # optional
+        # Blind carbon copy recipients (separated with comma)
+        #bcc: # optional
+        # An email address that will appear on the Reply-To field
+        #reply_to: # optional
+        # The Message-ID this message is replying to
+        #in_reply_to: # optional
+        # Allow unsigned/invalid certificates
+        #ignore_cert: # optional
+        # Convert body from Markdown to HTML (set content_type input as text/html too)
+        #convert_markdown: # optional
+        # Files that will be added to mail message attachments (separated with comma)
+        attachments: deployment_check.txt, image_scan.json, image_check.txt
