@@ -34,7 +34,7 @@ jobs:
         chmod +x roxctl
     - name: deployment-check
       run: |
-        ./roxctl --insecure-skip-tls-verify deployment check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} -f yaml/combined/national-parks-combined.yaml 2>&1 | tee image_scan.json
+        ./roxctl --insecure-skip-tls-verify deployment check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} -f yaml/combined/national-parks-combined.yaml 2>&1 | tee deployment_check.txt
     - name: image-scan
       run: |
         ./roxctl --insecure-skip-tls-verify image scan --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image quay.io/centos7/httpd-24-centos7:centos7 2>&1 | tee image_scan.json
