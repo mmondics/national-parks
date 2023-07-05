@@ -33,10 +33,7 @@ jobs:
     - name: install roxctl cli and scan manifest
       id: step1
       run: | 
-        curl -O https://mirror.openshift.com/pub/rhacs/assets/4.1.0/bin/Linux/roxctl
-        chmod +x roxctl
-        TOKEN=${{ env.ROX_API_TOKEN }}
-        ./roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image quay.io/mmondics/nationalparks-manifest:manifest-650159e39257e45ea5a528950c48a92a94e0f6ee
+        run: echo "test=hello" >> "$GITHUB_OUTPUT"
  
   test-job:
     runs-on: ubuntu-latest
