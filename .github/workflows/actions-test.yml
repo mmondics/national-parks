@@ -33,7 +33,7 @@ jobs:
     - name: install roxctl cli and scan manifest
       id: step1
       run: | 
-        run: echo "test=hello" >> "$GITHUB_OUTPUT"
+        echo "test=hello" >> "$GITHUB_OUTPUT"
  
   test-job:
     runs-on: ubuntu-latest
