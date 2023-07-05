@@ -23,21 +23,15 @@ jobs:
 
   acs-image-scan: 
     name: Scan container manifest with Red Hat Advanced Cluster Security
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     environment: openshift
     continue-on-error: true
     
     steps:
-    - name: install roxctl cli and scan manifest
-      id: step1
+    - name: install roxctl cli        
       run: | 
-        echo "test=hello" >> "$GITHUB_OUTPUT"
-        echo ::set-output name=output1::${GITHUB_OUTPUT}
- 
-  test-job:
-    runs-on: ubuntu-latest
-    needs: acs-image-scan
-    steps:
-      - env:
-          OUTPUT1: ${{steps.step1.outputs.output1}}
-        run: echo $OUTPUT1
+        curl -O https://mirror.openshift.com/pub/rhacs/assets/4.1.0/bin/Linux/roxctl
+        chmod +x roxctl
+    - name: image-check
+      run: |
+        ./roxctl --insecure-skip-tls-verify image check --endpoint ${{ env.ROX_CENTRAL_ADDRESS }} --image quay.io/centos7/httpd-24-centos7:centos7 2>&1 | tee image_check.txt
