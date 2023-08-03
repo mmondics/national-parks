@@ -24,6 +24,7 @@ on:
   push:
     paths:
       - source/nationalparks-py/*
+#on: workflow_dispatch
 
 jobs:
   s390x-build-and-push: 
