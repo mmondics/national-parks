@@ -13,7 +13,7 @@ This application is made up of a frontend with source code [here](https://github
   - [Tested Platforms](#tested-platforms)
   - [Troubleshooting](#troubleshooting)
     - [Cannot create a new project](#cannot-create-a-new-project)
-    - [Cannot access the Parksmap application in step 5](#cannot-access-the-parksmap-application-in-step-5)
+    - [Cannot access the Parksmap application in step 4](#cannot-access-the-parksmap-application-in-step-4)
     - [I messed up somewhere. Can I delete everything and try again?](#i-messed-up-somewhere-can-i-delete-everything-and-try-again)
     - [I don't have access to the `oc` CLI / I don't know how to use the `oc` CLI](#i-dont-have-access-to-the-oc-cli--i-dont-know-how-to-use-the-oc-cli)
 
@@ -85,7 +85,7 @@ If your OpenShift credential does not have the required role to create a new pro
 
 If you cannot create a new project and you do not have an existing project, you should reach out to your OpenShift cluster administrator to provide this for you.
 
-### Cannot access the Parksmap application in step 5
+### Cannot access the Parksmap application in step 4
 
 Check the status of the pods in the national-parks project: `oc get pods -n national-parks`. All 3 pods should be running and say 1/1 are ready.
 
