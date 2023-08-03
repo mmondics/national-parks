@@ -20,10 +20,11 @@ env:
   SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
   SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
   
-on:
-  push:
-    paths:
-      - source/nationalparks-py/*
+#on:
+#  push:
+#    paths:
+#      - source/nationalparks-py/*
+on: workflow_dispatch
 
 jobs:
   s390x-build-and-push: 
