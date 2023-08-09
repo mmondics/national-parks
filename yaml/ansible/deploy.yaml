@@ -1,0 +1,69 @@
+- hosts: localhost
+  gather_facts: true
+  become: true
+  vars:
+    ansible_connecton: local
+  environment:
+    KUBECONFIG: "{{ '/home/' if (ansible_user != 'root') else '/'}}{{ ansible_user }}/.kube/config"
+  tasks:
+    - name: Ensure 'kubernetes' pip module is installed.
+      tags: pip
+      ansible.builtin.pip:
+        name: kubernetes
+        state: present
+
+    - name: Create a new project called 'national-parks', if it doesn't already exist.
+      ansible.builtin.shell: oc new-project national-parks || oc project national-parks
+      register: project
+      changed_when: "'AlreadyExists' not in project.stderr"
+
+    - name: Download 'national-parks' manifest from GitHub URL.
+      tags: download
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/mmondics/national-parks/main/yaml/combined/national-parks-combined.yaml"
+        dest: ~/national-parks-combined.yaml
+        mode: '0664'
+
+    - name: Deploy the 'national-parks' application from downloaded manifest, wait until complete.
+      tags: deploy
+      kubernetes.core.k8s:
+        state: present
+        namespace: national-parks
+        src: ~/national-parks-combined.yaml
+        wait: True
+
+    - name: Query 'national-parks' pod info for next step.
+      tags: load
+      kubernetes.core.k8s_info:
+        kind: Pod
+        namespace: national-parks
+        label_selectors:
+          - component = nationalparks
+      register: pods
+
+    - name: Load the backend database with data.
+      tags: load
+      ansible.builtin.shell: "oc exec $(oc get pods -l component=nationalparks -n national-parks | tail -n 1 | awk '{print $1;}') -- curl -s http://localhost:8080/ws/data/load"
+
+    - name: Get the 'parksmap' frontend route URL.
+      tags: url
+      kubernetes.core.k8s_info:
+        kind: Route
+        namespace: national-parks
+        name: parksmap
+      register: url
+
+    - name: Get cluster URL for suggestion to put in /etc/hosts in next task.
+      tags: url
+      ansible.builtin.shell: "oc get dns.config.openshift.io/cluster -o jsonpath='{.spec.baseDomain}'"
+      changed_when: false
+      register: cluster_url
+
+    - name: Print instructions and 'parksmap' frontend route URL.
+      tags: url
+      ansible.builtin.debug:
+        msg: |
+          "To access the application from a web browser on your workstation, you will need to first add this line to your /etc/hosts file on your workstation:"
+          "{{ hostvars['localhost'].ipv4_default_ip }} parksmap-national-parks.apps.{{ cluster_url.stdout }} national-parks-national-parks.apps.{{ cluster_url.stdout }}"
+          "Then, open a web browser and go to: http://{{ url.resources[0].spec.host }}"
+          
