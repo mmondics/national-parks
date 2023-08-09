@@ -3,14 +3,25 @@
   become: true
   vars:
     ansible_connecton: local
-  environment:
-    KUBECONFIG: "{{ '/home/' if (ansible_user != 'root') else '/'}}{{ ansible_user }}/.kube/config"
   tasks:
+    - name: Set fact for KUBECONFIG auth.
+      tags: kubeconfig
+      set_fact:
+        KUBECONFIG: "{{ '/home/' if (ansible_user_id != 'root') else '/'}}{{ ansible_user_id }}/.kube/config"
+
+    - name: Get pip path for use in next step.
+      tags: pip
+      ansible.builtin.command: "which pip3"
+      register: pip_path
+      changed_when: false
+
     - name: Ensure 'kubernetes' pip module is installed.
       tags: pip
       ansible.builtin.pip:
         name: kubernetes
         state: present
+        executable: "{{ pip_path.stdout }}"
+        extra_args: --ignore-installed
 
     - name: Create a new project called 'national-parks', if it doesn't already exist.
       ansible.builtin.shell: oc new-project national-parks || oc project national-parks
@@ -21,7 +32,7 @@
       tags: download
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/mmondics/national-parks/main/yaml/combined/national-parks-combined.yaml"
-        dest: ~/national-parks-combined.yaml
+        dest: ./national-parks-combined.yaml
         mode: '0664'
 
     - name: Deploy the 'national-parks' application from downloaded manifest, wait until complete.
@@ -29,7 +40,7 @@
       kubernetes.core.k8s:
         state: present
         namespace: national-parks
-        src: ~/national-parks-combined.yaml
+        src: ./national-parks-combined.yaml
         wait: True
 
     - name: Query 'national-parks' pod info for next step.
@@ -53,7 +64,7 @@
         name: parksmap
       register: url
 
-    - name: Get cluster URL for suggestion to put in /etc/hosts in next task.
+    - name: Get cluster URL for instructions to put in /etc/hosts in next task.
       tags: url
       ansible.builtin.shell: "oc get dns.config.openshift.io/cluster -o jsonpath='{.spec.baseDomain}'"
       changed_when: false
@@ -62,8 +73,8 @@
     - name: Print instructions and 'parksmap' frontend route URL.
       tags: url
       ansible.builtin.debug:
-        msg: |
-          "To access the application from a web browser on your workstation, you will need to first add this line to your /etc/hosts file on your workstation:"
-          "{{ hostvars['localhost'].ipv4_default_ip }} parksmap-national-parks.apps.{{ cluster_url.stdout }} national-parks-national-parks.apps.{{ cluster_url.stdout }}"
-          "Then, open a web browser and go to: http://{{ url.resources[0].spec.host }}"
-          
+        msg:
+          - "To access the application from a web browser on your workstation..."
+          - "You will need to first add this line to your /etc/hosts file on your workstation:"
+          - "{{ ansible_default_ipv4.address }} parksmap-national-parks.apps.{{ cluster_url.stdout }} national-parks-national-parks.apps.{{ cluster_url.stdout }}"
+          - "Then, open a web browser and go to: http://{{ url.resources[0].spec.host }}"
