@@ -1,4 +1,4 @@
-FROM docker.io/maven:latest AS builder
+FROM docker.io/maven:3.9.5-eclipse-temurin-17-focal AS builder
 WORKDIR /opt/app
 COPY . .
 RUN mvn clean package
