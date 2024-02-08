@@ -23,8 +23,12 @@ This application is made up of a frontend with source code [here](https://github
 3. Access to the OpenShift command line interface (CLI) or web console
 
 ## Procedure
+- This document will walk you through a manual deployment below, following a step-by-step procedure. 
+- If you instead would like to deploy the application via web console or via automation:
+    - Alternate Methods:
+        - Web console, see the [Troubleshooting Section](#i-dont-have-access-to-the-oc-cli--i-dont-know-how-to-use-the-oc-cli) below.
+        - If you want to use an Ansible-automated deployment, see the [instructions](#automate-the-deployment-for-me) below:
 
-Note: if you want to use the OpenShift web console to deploy the application instead, see the [Troubleshooting Section](#i-dont-have-access-to-the-oc-cli--i-dont-know-how-to-use-the-oc-cli) below.
 
 1. Create a new project in OpenShift, for example `national-parks`
 
@@ -153,3 +157,16 @@ You can deploy this application via the OpenShift web console.
 You should now see the National Parks map with US locations loaded.
 
 ![national-parks-loaded-home](https://raw.githubusercontent.com/mmondics/media/main/images/national-parks-loaded-home.png)
+
+### Automate the deployment for me
+- Open a command-line prompt and SSH to your cluster's bastion server. 
+- For example on a Mac/Linux machine that would look like this:
+```
+ssh <username>@<ip-address>
+```
+- It will ask you for a password, type it in and hit Enter. 
+- Then, execute the following command:
+```
+sudo dnf install git -y && git clone https://github.com/mmondics/national-parks.git && cd national-parks && sh deploy.sh
+```
+- The instructions at the end of the process will tell you how to display your application.
